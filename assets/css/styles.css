@@ -2652,11 +2652,12 @@
       .floating-preferences {
         position: fixed;
         right: 22px;
-        bottom: 92px;
+        bottom: var(--floating-preferences-bottom, 92px);
         z-index: 82;
         display: grid;
         gap: 10px;
         justify-items: end;
+        transition: bottom 260ms var(--ease), opacity 260ms var(--ease);
       }
 
       .language-switcher {
@@ -4267,7 +4268,7 @@
 
         .floating-preferences {
           right: 14px;
-          bottom: 84px;
+          bottom: var(--floating-preferences-bottom, 84px);
           gap: 8px;
         }
 

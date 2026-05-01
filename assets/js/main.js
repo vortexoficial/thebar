@@ -546,6 +546,21 @@
     });
   }
 
+  function updateFloatingPreferencesOffset() {
+    const controls = document.querySelector(".floating-preferences");
+    const banner = document.querySelector("#cookie-banner");
+    if (!controls) return;
+
+    const bannerVisible = banner && !banner.hidden && getComputedStyle(banner).display !== "none";
+    if (!bannerVisible) {
+      controls.style.removeProperty("--floating-preferences-bottom");
+      return;
+    }
+
+    const bannerHeight = Math.ceil(banner.getBoundingClientRect().height);
+    controls.style.setProperty("--floating-preferences-bottom", `${bannerHeight + 14}px`);
+  }
+
   function applyLanguage(language, options = {}) {
     const nextLanguage = language === "en" ? "en" : "pt";
     preferences.language = nextLanguage;
@@ -558,6 +573,7 @@
     updateGeneratedErrors(nextLanguage);
     if (options.persist !== false) preferenceStorage.set(languageKey, nextLanguage);
     updatePreferenceControls();
+    updateFloatingPreferencesOffset();
   }
 
   function updatePreferenceControls() {
@@ -788,6 +804,7 @@
   requestScrollbarUpdate(false);
   window.addEventListener("scroll", () => requestScrollbarUpdate(true), { passive: true });
   window.addEventListener("resize", () => requestScrollbarUpdate(false));
+  window.addEventListener("resize", updateFloatingPreferencesOffset);
 
   function closeMenu() {
     if (!menuToggle || !mobileOverlay) return;
@@ -1534,11 +1551,13 @@
   function saveCookiePreferences(value) {
     storage.set(cookieKey, JSON.stringify(value));
     if (cookieBanner) cookieBanner.hidden = true;
+    updateFloatingPreferencesOffset();
   }
 
   if (cookieBanner && storage.get(cookieKey)) {
     cookieBanner.hidden = true;
   }
+  updateFloatingPreferencesOffset();
 
   document.querySelector("[data-cookie-accept]")?.addEventListener("click", () => {
     saveCookiePreferences({ essential: true, performance: true, marketing: true });
@@ -1550,6 +1569,7 @@
 
   document.querySelector("[data-cookie-custom]")?.addEventListener("click", () => {
     cookieOptions?.classList.toggle("is-visible");
+    window.requestAnimationFrame(updateFloatingPreferencesOffset);
   });
 
   document.querySelector("[data-cookie-save]")?.addEventListener("click", () => {
@@ -1564,6 +1584,7 @@
     if (!cookieBanner) return;
     cookieBanner.hidden = false;
     cookieOptions?.classList.add("is-visible");
+    window.requestAnimationFrame(updateFloatingPreferencesOffset);
   });
 
   const form = document.querySelector("#contact-form");
