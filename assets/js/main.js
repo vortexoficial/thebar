@@ -542,6 +542,60 @@
       "Vocês oferecem opções não alcoólicas?": "Do you offer non-alcoholic options?",
       "Vocês trazem o bar?": "Do you bring the bar?",
       "Voltar ao início": "Back to home",
+      "Carta da casa": "House menu",
+      "Receitas com a nossa assinatura.": "Recipes with our signature.",
+      "Quatro drinks autorais que já brilharam em eventos The Bar e dois clássicos que nunca saem da carta. Escolha um e descubra como ele nasce.": "Four signature cocktails that have shone at The Bar events and two classics that never leave the menu. Pick one and discover how it is made.",
+      "Ver a receita": "See the recipe",
+      "Autoral The Bar": "The Bar signature",
+      "Clássico": "Classic",
+      "Preparo": "Method",
+      "Receita anterior": "Previous recipe",
+      "Próxima receita": "Next recipe",
+      "Toque ou passe o mouse sobre o drink para ver a receita.": "Tap or hover over a cocktail to see the recipe.",
+      "Quero essa carta no meu evento": "I want this menu at my event",
+      "Ver receita do Carcamano": "See the Carcamano recipe",
+      "Ver receita do Royale": "See the Royale recipe",
+      "Ver receita do Amalfi": "See the Amalfi recipe",
+      "Ver receita do Fitzgerald": "See the Fitzgerald recipe",
+      "Ver receita do Negroni": "See the Negroni recipe",
+      "Ver receita do Aperol Spritz": "See the Aperol Spritz recipe",
+      "Carcamano servido em taça de cristal com espiral de limão-siciliano": "Carcamano served in a crystal glass with a lemon twist",
+      "Royale vermelho em taça de cristal com espuma de gengibre": "Red Royale in a crystal glass with ginger foam",
+      "Amalfi em copo baixo com camada de vinho tinto e laranja desidratada": "Amalfi in a rocks glass with a red wine float and dried orange",
+      "Fitzgerald em copo baixo com rodela de cítrico desidratado no balcão do evento": "Fitzgerald in a rocks glass with a dried citrus wheel at the event bar",
+      "Negroni em copo baixo com gelo e rodela de laranja": "Negroni in a rocks glass with ice and an orange slice",
+      "Bartender da The Bar servindo Aperol Spritz em taça com gelo": "The Bar bartender pouring an Aperol Spritz over ice",
+      "50 ml de bourbon": "50 ml bourbon",
+      "25 ml de xarope de mel": "25 ml honey syrup",
+      "25 ml de suco de limão-siciliano": "25 ml lemon juice",
+      "3 gotas de extrato de gengibre": "3 drops ginger extract",
+      "Bata tudo na coqueteleira com bastante gelo. Coe duas vezes para a taça gelada e finalize com uma espiral de casca de limão-siciliano.": "Shake everything hard with plenty of ice. Double strain into a chilled glass and finish with a lemon peel twist.",
+      "40 ml de vodka": "40 ml vodka",
+      "20 ml de saquê": "20 ml sake",
+      "20 ml de xarope de hibisco": "20 ml hibiscus syrup",
+      "20 ml de suco de limão": "20 ml lime juice",
+      "Espuma de gengibre para cobrir": "Ginger foam to top",
+      "Bata vodka, saquê, xarope e limão com gelo. Coe para a taça, cubra com a espuma de gengibre e finalize com pó de hibisco.": "Shake vodka, sake, syrup and lime with ice. Strain into the glass, top with ginger foam and finish with hibiscus powder.",
+      "30 ml de Malibu": "30 ml Malibu",
+      "30 ml de vodka": "30 ml vodka",
+      "20 ml de extrato de maracujá": "20 ml passion fruit extract",
+      "15 ml de xarope de açúcar": "15 ml simple syrup",
+      "20 ml de vinho tinto": "20 ml red wine",
+      "Bata tudo, menos o vinho, e sirva em copo baixo com gelo. Despeje o vinho devagar sobre uma colher para formar a camada e decore com laranja desidratada.": "Shake everything except the wine and serve in a rocks glass over ice. Slowly pour the wine over a spoon to create the layer and garnish with dried orange.",
+      "50 ml de gin": "50 ml gin",
+      "20 ml de xarope de açúcar": "20 ml simple syrup",
+      "2 dashes de angostura": "2 dashes Angostura bitters",
+      "Bata tudo com gelo na coqueteleira. Coe para copo baixo com gelo novo e finalize com uma rodela de cítrico desidratado.": "Shake everything with ice. Strain into a rocks glass over fresh ice and finish with a dried citrus wheel.",
+      "30 ml de gin": "30 ml gin",
+      "30 ml de Campari": "30 ml Campari",
+      "30 ml de vermute rosso": "30 ml sweet vermouth",
+      "Casca de laranja": "Orange peel",
+      "Mexa tudo com gelo no mixing glass. Coe para copo baixo com uma pedra grande de gelo e perfume com a casca de laranja.": "Stir everything with ice in a mixing glass. Strain into a rocks glass over a large ice cube and express the orange peel on top.",
+      "60 ml de Aperol": "60 ml Aperol",
+      "90 ml de espumante brut": "90 ml brut sparkling wine",
+      "30 ml de água com gás": "30 ml soda water",
+      "1 rodela de laranja": "1 orange slice",
+      "Encha a taça com gelo, adicione o Aperol e o espumante e complete com a água com gás. Mexa de leve e finalize com a laranja.": "Fill the glass with ice, add the Aperol and sparkling wine and top with soda water. Stir gently and finish with the orange.",
       "Welcome drink autoral assinado para o casal": "Signature welcome drink created for the couple",
       "Welcome drink + open bar": "Welcome drink + open bar",
       "WhatsApp": "WhatsApp",
@@ -2094,5 +2148,51 @@
         window.location.href = url;
       }
     });
+  });
+
+  document.querySelectorAll("[data-recipes-carousel]").forEach((carousel) => {
+    const track = carousel.querySelector(".recipes-track");
+    const cards = [...carousel.querySelectorAll(".recipe-card")];
+    const prev = carousel.querySelector(".recipes-prev");
+    const next = carousel.querySelector(".recipes-next");
+    if (!track || !cards.length) return;
+
+    function closeAll() {
+      cards.forEach((card) => {
+        card.classList.remove("is-open");
+        card.querySelector(".recipe-toggle")?.setAttribute("aria-expanded", "false");
+      });
+    }
+
+    function updateNav() {
+      const max = track.scrollWidth - track.clientWidth;
+      if (prev) prev.disabled = track.scrollLeft <= 4;
+      if (next) next.disabled = track.scrollLeft >= max - 4;
+    }
+
+    cards.forEach((card) => {
+      const toggle = card.querySelector(".recipe-toggle");
+      toggle?.addEventListener("click", () => {
+        const open = !card.classList.contains("is-open");
+        closeAll();
+        card.classList.toggle("is-open", open);
+        toggle.setAttribute("aria-expanded", String(open));
+      });
+    });
+
+    carousel.querySelectorAll("[data-recipes-step]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+        const step = cards[0].getBoundingClientRect().width + gap;
+        track.scrollBy({
+          left: step * Number(button.dataset.recipesStep),
+          behavior: reducedMotion.matches ? "auto" : "smooth"
+        });
+      });
+    });
+
+    track.addEventListener("scroll", updateNav, { passive: true });
+    window.addEventListener("resize", updateNav);
+    updateNav();
   });
 })();
